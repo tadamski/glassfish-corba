@@ -81,6 +81,7 @@ import javax.activity.ActivityRequiredException ;
 import javax.activity.ActivityCompletedException ;
 import javax.activity.InvalidActivityException ;
 
+import org.jboss.javax.rmi.RemoteObjectSubstitutionManager;
 import org.omg.CORBA.SystemException;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.TypeCode;
@@ -468,10 +469,12 @@ public class Util implements javax.rmi.CORBA.UtilDelegate
      */
     public void writeRemoteObject(OutputStream out, java.lang.Object obj) 
     {
+        //allow the object to be replaced
+        Object replacedObj = RemoteObjectSubstitutionManager.writeReplaceRemote(obj);
         // Make sure we have a connected object, then
         // write it out...
-    
-        Object newObj = Utility.autoConnect(obj,out.orb(),false);
+
+        Object newObj = Utility.autoConnect(replacedObj,out.orb(),false);
         out.write_Object((org.omg.CORBA.Object)newObj);
     }
     
@@ -486,10 +489,13 @@ public class Util implements javax.rmi.CORBA.UtilDelegate
      */
     public void writeAbstractObject( OutputStream out, java.lang.Object obj ) 
     {
+        //allow the object to be replaced
+        Object replacedObj = RemoteObjectSubstitutionManager.writeReplaceRemote(obj);
+
         // Make sure we have a connected object, then
         // write it out...
-    
-        Object newObj = Utility.autoConnect(obj,out.orb(),false);
+
+        Object newObj = Utility.autoConnect(replacedObj,out.orb(),false);
         ((org.omg.CORBA_2_3.portable.OutputStream)out).write_abstract_interface(newObj);
     }
     
