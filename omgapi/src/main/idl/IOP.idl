@@ -309,6 +309,10 @@ module IOP {
      */
     const ComponentId TAG_JAVA_CODEBASE = 25 ;
 
+    const ComponentId TAG_CSI_SEC_MECH_LIST = 33;
+
+    const ComponentId TAG_NULL_TAG = 34;
+
     /**
      * RMI-IIOP has multiple stream format versions.  A server
      * can specify its maximum version by including the
@@ -455,6 +459,8 @@ module IOP {
      * message in the unmarshaled exception object.
      */
     const ServiceId ExceptionDetailMessage = 14;
+
+    const ServiceId SecurityAttributeService = 15;
 
 
     // BEGIN part which lived in Interceptors.idl.

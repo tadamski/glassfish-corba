@@ -95,6 +95,8 @@ module CORBA {
     interface StructDef;
     interface UnionDef;
     interface EnumDef;
+    interface FixedDef;
+    interface WstringDef;
     interface AliasDef;
     interface InterfaceDef;
     interface ExceptionDef;
@@ -102,6 +104,7 @@ module CORBA {
     interface ValueMemberDef;   // orbos 98-01-18: Objects By Value
     interface ValueBoxDef;      // orbos 98-01-18: Objects By Value
     interface NativeDef;
+
 
 
     typedef sequence <InterfaceDef> InterfaceDefSeq;
@@ -219,8 +222,8 @@ module CORBA {
             in RepositoryId id,
             in Identifier name,
             in VersionSpec version,
-            in boolean is_abstract,
-            in InterfaceDefSeq base_interfaces
+            in InterfaceDefSeq base_interfaces,
+            in boolean is_abstract
             );
 
         // orbos 98-01-18: Objects By Value
@@ -230,9 +233,8 @@ module CORBA {
             in VersionSpec version,
             in boolean is_custom,
             in boolean is_abstract,
-            in octet flags,     // must be 0
             in ValueDef base_value,
-            in boolean has_safe_base,
+            in boolean is_truncatable,
             in ValueDefSeq abstract_base_values,
             in InterfaceDefSeq supported_interfaces,
             in InitializerSeq initializers
@@ -361,6 +363,8 @@ module CORBA {
     };
 
 
+
+
     interface UnionDef : TypedefDef, Container
     /**
        A UnionDef represents an OMG IDL union definition.
@@ -379,6 +383,16 @@ module CORBA {
     {
         attribute EnumMemberSeq members;
     };
+
+            interface WstringDef : IDLType {
+                    attribute unsigned long         bound;
+            };
+
+
+        interface FixedDef : IDLType {
+                attribute unsigned short        digits;
+                attribute short                 scale;
+        };
 
 
     interface AliasDef : TypedefDef
@@ -550,11 +564,11 @@ module CORBA {
             RepositoryId id;
             RepositoryId defined_in;
             VersionSpec version;
-            boolean is_abstract;
             OpDescriptionSeq operations;
             AttrDescriptionSeq attributes;
             RepositoryIdSeq base_interfaces;
             TypeCode type;
+            boolean is_abstract;
         };
 
         FullInterfaceDescription describe_interface();
@@ -587,6 +601,7 @@ module CORBA {
         RepositoryId defined_in;
         VersionSpec version;
         RepositoryIdSeq base_interfaces;
+        boolean is_abstract;
     };
 
 
@@ -619,8 +634,6 @@ module CORBA {
             attribute ValueDefSeq abstract_base_values;
             attribute boolean is_abstract;
             attribute boolean is_custom;
-            attribute octet flags; // always 0
-            attribute boolean has_safe_base;
 
             // read interface
             boolean is_a(in RepositoryId value_id);
@@ -679,7 +692,6 @@ module CORBA {
         RepositoryId id;
         boolean is_abstract;
         boolean is_custom;
-        octet   flags; // always 0
         RepositoryId defined_in;
         VersionSpec version;
         RepositoryIdSeq supported_interfaces;
